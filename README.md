@@ -22,13 +22,13 @@ Or install it yourself as:
 $srvy = Srvy::Resolver.new # default configuration, using the locally configured resolver
 
 # picks a single server by randomized with weight in the highest priority group
-$srvy.get_single("db-slaves.mydomain.com").to_host_port_s # => "mysql01.mydomain.com:3306"
+$srvy.get_single("db-slaves.mydomain.com") # => "mysql01.mydomain.com:3306"
 
 # to get all services in the highest priority group 
-$srvy.get_many("memcache.mydomain.com").map(&:to_host_port_s) # => ["memcache01.mydomain.com:11211", "memcache02.mydomain.com:11211"]
+$srvy.get_many("memcache.mydomain.com") # => ["memcache01.mydomain.com:11211", "memcache02.mydomain.com:11211"]
 
 # get all records, including lower priority (e.g. backup) services
-$srvy.get_all("db.mydomain.com").map(&:to_host_port_s) # => ["db01.mydomain.com:3306", "db01-failover.mydomain.com:3306"]
+$srvy.get_all("db.mydomain.com") # => ["db01.mydomain.com:3306", "db01-failover.mydomain.com:3306"]
 
 ```
 

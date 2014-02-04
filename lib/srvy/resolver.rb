@@ -23,16 +23,19 @@ module Srvy
       "#<Srvy::Resolver:#{object_id} dns=#{@dns.nameservers.inspect}>"
     end
 
-    def get_single(host)
-      get(host).get_single
+    def get_single(host, format=:host_port)
+      result = get(host).get_single
+      Srvy::Formatters.format_single(format, result)
     end
 
-    def get_many(host)
-      get(host).get_many
+    def get_many(host, format=:host_port)
+      result = get(host).get_many
+      Srvy::Formatters.format_many(format, result)
     end
 
-    def get_all(host)
-      get(host).get_all
+    def get_all(host, format=:host_port)
+      result = get(host).get_all
+      Srvy::Formatters.format_many(format, result)
     end
 
     def get_dns(host)
@@ -55,5 +58,6 @@ module Srvy
      
       result
     end
+
   end
 end

@@ -17,9 +17,5 @@ module Srvy
       @priority = priority
       @ttl      = ttl
     end
-
-    def to_host_port_s
-      "#{host}:#{port}"
-    end
   end
 end
