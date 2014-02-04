@@ -1,4 +1,5 @@
 require "srvy/version"
+require "net/dns/ext/resolver_nameserver_monkey_patch"
 
 module Srvy
   autoload :Resolver, "srvy/resolver"

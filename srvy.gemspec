@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "net-dns",        "~> 0.8.0"
+  spec.add_dependency "net-dns",        "= 0.8.0" # pin this version of net-dns because our monkey patch only applies to it.
   spec.add_dependency "lru_redux",      "~> 0.8.1"
 
   spec.add_development_dependency "bundler", "~> 1.3"

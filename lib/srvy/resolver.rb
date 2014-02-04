@@ -1,4 +1,4 @@
-require 'net/dns'
+require "net/dns/ext/resolver_nameserver_monkey_patch"
 require 'lru_redux'
 
 module Srvy
@@ -10,10 +10,7 @@ module Srvy
       @dns             = Net::DNS::Resolver.new
 
       if options[:nameserver]
-        # turns out net-dns has a pretty mental configuration codepath
-        # we reset to an empty array to get the right behavior
-        @dns.nameserver = []
-        @dns.nameserver = options[:nameserver] 
+        @dns.nameservers = options[:nameserver] 
       end
 
       @cache = LruRedux::Cache.new(cache_size) #cache of host -> result kv pairs
