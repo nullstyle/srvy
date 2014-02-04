@@ -1,4 +1,5 @@
 # Srvy
+[![Code Climate](https://codeclimate.com/github/nullstyle/srvy.png)](https://codeclimate.com/github/nullstyle/srvy)
 
 A ruby gem to integration SRV-based service discovery into your application
 
