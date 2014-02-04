@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec",        ">= 2.14.1"
   spec.add_development_dependency "rspec-given",  ">= 3.5.0"
   spec.add_development_dependency "coveralls",    "~> 0.7.0"
+  spec.add_development_dependency "timecop",      "~> 0.7.1"
 end

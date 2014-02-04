@@ -12,12 +12,12 @@ module Srvy
         Srvy::Host.new(srv.host, srv.port, srv.weight, srv.priority, srv.ttl)
       end
 
-      new(hosts)
+      new(Time.now, hosts)
     end
 
-    def initialize(hosts)
-      @created_at = Time.now
-      @hosts = hosts
+    def initialize(created_at, hosts)
+      @created_at = created_at
+      @hosts      = hosts
     end
 
     def get_single
@@ -39,7 +39,7 @@ module Srvy
 
     def expired?
       now = Time.now
-      @hosts.any?{|s| @created_at + s.ttl <= now}
+      @hosts.any?{|s| @created_at + s.ttl < now}
     end
 
     private

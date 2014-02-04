@@ -2,6 +2,7 @@
   require 'rspec/given'
   require 'srvy'
   require 'coveralls'
+  require 'timecop'
   
   Coveralls.wear!
 
