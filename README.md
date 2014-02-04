@@ -1,5 +1,6 @@
 # Srvy
 [![Build Status](https://travis-ci.org/nullstyle/srvy.png?branch=master)](https://travis-ci.org/nullstyle/srvy)
+[![Coverage Status](https://coveralls.io/repos/nullstyle/srvy/badge.png)](https://coveralls.io/r/nullstyle/srvy)
 [![Code Climate](https://codeclimate.com/github/nullstyle/srvy.png)](https://codeclimate.com/github/nullstyle/srvy)
 
 A rubygem to integrate SRV-based service discovery into your application
@@ -33,6 +34,8 @@ $srvy.get_many("memcache.mydomain.com") # => ["memcache01.mydomain.com:11211", "
 $srvy.get_all("db.mydomain.com") # => ["db01.mydomain.com:3306", "db01-failover.mydomain.com:3306"]
 
 ```
+
+
 
 #TODO
 
