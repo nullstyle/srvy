@@ -1,6 +1,6 @@
 module Srvy
   class Result
-    
+    EMPTY_RESULT_TTL = 10
 
     def self.from_dns(dns_result)
       # for each SRV record
@@ -19,7 +19,7 @@ module Srvy
 
     def get_single
       return nil if @hosts.empty?
-      
+
       roll = rand(best_priority_cumulative_weight)
       acc = 0
 
@@ -39,7 +39,9 @@ module Srvy
 
     def expired?
       now = Time.now
-      @hosts.any?{|s| @created_at + s.ttl < now}
+      min_ttl = @hosts.map(&:ttl).min
+      min_ttl ||= EMPTY_RESULT_TTL # in case there are no hosts
+      @created_at + min_ttl < now
     end
 
     private

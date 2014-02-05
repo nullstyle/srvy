@@ -1,19 +1,19 @@
 require "net/dns/ext/resolver_nameserver_monkey_patch"
-require 'lru_redux'
+require 'lru_redux/has_key_monkey_patch'
 
 module Srvy
   class Resolver
+    attr_reader :cache
 
     def initialize(options={})
-      cache_size  = options[:cache_size] || 100
-
-      @dns             = Net::DNS::Resolver.new
+      @dns       = Net::DNS::Resolver.new
 
       if options[:nameserver]
         @dns.nameservers = options[:nameserver] 
       end
 
-      @cache = LruRedux::Cache.new(cache_size) #cache of host -> result kv pairs
+      cache_size = options[:cache_size] || 100
+      @cache     = LruRedux::Cache.new(cache_size) #cache of host -> result kv pairs
     end
 
     def inspect
@@ -22,6 +22,7 @@ module Srvy
 
     def get_single(host, format=:host_port)
       result = get(host).get_single
+
       Srvy::Formatters.format_single(format, result)
     end
 

@@ -25,15 +25,27 @@ describe Srvy::Result do
 
 
   describe "#expired?" do
-    subject{ Srvy::Result.new(now, hosts) }
 
-    Given(:hosts) { hosts_with_equal_weight }
 
-    Then{ Timecop.freeze(now)             { expect(subject).to_not be_expired } }
-    Then{ Timecop.freeze(now + ttl)       { expect(subject).to_not be_expired } }
-    Then{ Timecop.freeze(now + ttl + 1)   { expect(subject).to be_expired     } }
-    Then{ Timecop.freeze(now - ttl)       { expect(subject).to_not be_expired } }
-    Then{ Timecop.freeze(now - (ttl + 1)) { expect(subject).to_not be_expired } }
+    context "with data" do
+      subject{ Srvy::Result.new(now, hosts_with_equal_weight) }
+
+      Then{ Timecop.freeze(now)             { expect(subject).to_not be_expired } }
+      Then{ Timecop.freeze(now + ttl)       { expect(subject).to_not be_expired } }
+      Then{ Timecop.freeze(now + ttl + 1)   { expect(subject).to be_expired     } }
+      Then{ Timecop.freeze(now - ttl)       { expect(subject).to_not be_expired } }
+      Then{ Timecop.freeze(now - (ttl + 1)) { expect(subject).to_not be_expired } }
+    end
+
+    context "with no data" do
+      subject{ Srvy::Result.new(now, []) }
+
+      Then{ Timecop.freeze(now)       { expect(subject).to_not be_expired } }
+      Then{ Timecop.freeze(now + 10)  { expect(subject).to_not be_expired } }
+      Then{ Timecop.freeze(now + 11)  { expect(subject).to be_expired     } }
+      Then{ Timecop.freeze(now - 10)  { expect(subject).to_not be_expired } }
+      Then{ Timecop.freeze(now - 11)  { expect(subject).to_not be_expired } }
+    end
   end
 
   describe "#from_dns" do
