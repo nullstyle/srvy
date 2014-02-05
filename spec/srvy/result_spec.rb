@@ -19,20 +19,6 @@ describe Srvy::Result, "#expired?" do
   Then{ Timecop.freeze(now - (ttl + 1)) { expect(subject).to_not be_expired } }
 end
 
-
-describe Srvy::Result, "get_many" do
-  subject{ Srvy::Result.new(Time.now, hosts) }
-
-  Given(:hosts) { [
-    Srvy::Host.new("test01.host.com", 11211, 0,  0, 100),
-    Srvy::Host.new("test02.host.com", 11211, 0,  1, 100),
-  ] }
-
-  When(:result){ subject.get_many }
-  # should only have the best (i.e. lowest) priority
-  Then{ expect(result).to eq([hosts[0]]) }
-end
-
 describe Srvy::Result, "from_dns" do
   subject{ Srvy::Result.from_dns(dns_result) }
 
@@ -60,6 +46,18 @@ describe Srvy::Result, "from_dns" do
   end
 end
 
+describe Srvy::Result, "get_many" do
+  subject{ Srvy::Result.new(Time.now, hosts) }
+
+  Given(:hosts) { [
+    Srvy::Host.new("test01.host.com", 11211, 0,  0, 100),
+    Srvy::Host.new("test02.host.com", 11211, 0,  1, 100),
+  ] }
+
+  When(:result){ subject.get_many }
+  # should only have the best (i.e. lowest) priority
+  Then{ expect(result).to eq([hosts[0]]) }
+end
 
 describe Srvy::Result, "get_all" do
   subject{ Srvy::Result.new(Time.now, hosts) }
