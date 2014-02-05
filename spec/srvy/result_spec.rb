@@ -7,7 +7,8 @@ describe Srvy::Result, "#expired?" do
     Srvy::Host.new("test01.host.com", 11211, 10, 0, ttl),
     Srvy::Host.new("test02.host.com", 11211, 5,  0, ttl),
   ] }
-  Given(:now){ Time.now }
+
+  Given(:now){ Time.at(Time.now.to_i) } # round to nearest second so jruby stops complaining on boundary cases
   Given(:ttl){ 100 }
 
 
