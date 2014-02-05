@@ -64,14 +64,20 @@ end
 describe Srvy::Result, "get_all" do
   subject{ Srvy::Result.new(Time.now, hosts) }
 
-  Given(:hosts) { [
-    Srvy::Host.new("test01.host.com", 11211, 0,  0, 100),
-    Srvy::Host.new("test02.host.com", 11211, 0,  1, 100),
-  ] }
-
   When(:result){ subject.get_all }
 
-  Then{ expect(result).to eq(hosts) }
+  context "with some hosts" do  
+    Given(:hosts) { [
+      Srvy::Host.new("test01.host.com", 11211, 0,  0, 100),
+      Srvy::Host.new("test02.host.com", 11211, 0,  1, 100),
+    ] }
+    Then{ expect(result).to eq(hosts) }
+  end
+
+  context "with no hosts" do
+    Given(:hosts) { [ ] }
+    Then{ expect(result).to eq(hosts) }
+  end
 end
 
 describe Srvy::Result, "get_single" do
@@ -91,9 +97,11 @@ describe Srvy::Result, "get_single" do
     Srvy::Host.new("test01.host.com", 11211, 10,  0, 100),
     Srvy::Host.new("test02.host.com", 11211, 10,  1, 100),
   ] }
+  Given(:no_hosts) { [ ] }
+
 
   Given(:call_count) { 10000 }
-  Given(:allowance)  { 0.01 }
+  Given(:allowance)  { 0.02 }
 
 
   When(:result_percentages) do 
@@ -103,7 +111,8 @@ describe Srvy::Result, "get_single" do
       acc[call_result] ||= 0
       acc[call_result] += 1
     end
-    hosts.each_with_object({}) do |host, acc|
+    all_hosts_and_results = result_counts.keys | hosts
+    all_hosts_and_results.each_with_object({}) do |host, acc|
       count = result_counts[host] || 0
       acc[host] = count / call_count.to_f
     end
@@ -135,6 +144,16 @@ describe Srvy::Result, "get_single" do
     Then do
       expect(result_percentages[hosts[0]]).to be_within(allowance).of(0.75)
       expect(result_percentages[hosts[1]]).to be_within(allowance).of(0.25)
+    end 
+  end
+
+
+
+  context "When the result has hosts with unequal weights" do
+    Given(:hosts){ no_hosts }
+
+    Then do
+      expect(result_percentages[nil]).to be_within(allowance).of(1.0)
     end 
   end
 end

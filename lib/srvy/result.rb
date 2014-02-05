@@ -18,6 +18,8 @@ module Srvy
     end
 
     def get_single
+      return nil if @hosts.empty?
+      
       roll = rand(best_priority_cumulative_weight)
       acc = 0
 
