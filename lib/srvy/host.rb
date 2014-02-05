@@ -1,6 +1,3 @@
-require 'net/dns'
-require 'lru_redux'
-
 module Srvy
   class Host
 
