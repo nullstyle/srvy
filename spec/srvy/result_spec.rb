@@ -33,6 +33,33 @@ describe Srvy::Result, "get_many" do
   Then{ expect(result).to eq([hosts[0]]) }
 end
 
+describe Srvy::Result, "from_dns" do
+  subject{ Srvy::Result.from_dns(dns_result) }
+
+  Given(:dns_result) { Net::DNS::Resolver.new(:nameservers => "8.8.8.8").search("_xmpp-server._tcp.gmail.com", Net::DNS::SRV) }
+  Given(:srvs)       { dns_result.answer.select{|rr| rr.is_a?(Net::DNS::RR::SRV) }}
+  Given(:dns_hosts)  { srvs.map(&:host).sort }
+  Given(:srvys)      { subject.get_all }
+  Given(:srvy_hosts) { srvys.map(&:host).sort }
+
+  Then{ expect(subject).to be_kind_of(Srvy::Result) }
+  Then{ expect(srvy_hosts).to eq(dns_hosts) }
+
+
+  Then do
+    srvys.each do |srvy|
+      dns = srvs.find{|d| d.host == srvy.host}
+
+      expect(dns).to_not be_nil
+
+      expect(srvy.host).to      eq(dns.host)
+      expect(srvy.port).to      eq(dns.port)
+      expect(srvy.weight).to    eq(dns.weight)
+      expect(srvy.priority).to  eq(dns.priority)
+    end
+  end
+end
+
 
 describe Srvy::Result, "get_all" do
   subject{ Srvy::Result.new(Time.now, hosts) }
@@ -85,7 +112,6 @@ describe Srvy::Result, "get_single" do
   context "When the result has hosts with equal weights" do
     Given(:hosts){ hosts_with_equal_weight }
 
-    # should only have the best (i.e. lowest) priority
     Then do
       result_percentages.values.each do |percentage|
         expect(percentage).to be_within(allowance).of(0.5)
@@ -96,7 +122,6 @@ describe Srvy::Result, "get_single" do
   context "When the result has hosts with unequal priority" do
     Given(:hosts){ hosts_with_unequal_priorities }
 
-    # should only have the best (i.e. lowest) priority
     Then do
       expect(result_percentages[hosts[0]]).to be_within(allowance).of(1.0)
       expect(result_percentages[hosts[1]]).to be_within(allowance).of(0.0)
@@ -107,7 +132,6 @@ describe Srvy::Result, "get_single" do
   context "When the result has hosts with unequal weights" do
     Given(:hosts){ hosts_with_unequal_weight }
 
-    # should only have the best (i.e. lowest) priority
     Then do
       expect(result_percentages[hosts[0]]).to be_within(allowance).of(0.75)
       expect(result_percentages[hosts[1]]).to be_within(allowance).of(0.25)
