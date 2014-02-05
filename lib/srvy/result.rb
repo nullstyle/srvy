@@ -22,10 +22,11 @@ module Srvy
 
     def get_single
       roll = rand(best_priority_cumulative_weight)
+      acc = 0
 
       best_priority_hosts_by_weight.each do |host|
-        roll -= host.weight
-        return host if roll <= 0
+        acc += host.weight
+        return host if roll < acc
       end
     end
 
