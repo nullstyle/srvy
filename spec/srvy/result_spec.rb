@@ -65,7 +65,7 @@ describe Srvy::Result, "get_single" do
   ] }
 
   Given(:call_count) { 10000 }
-  Given(:allowance)  { 0.1 }
+  Given(:allowance)  { 0.01 }
 
 
   When(:result_percentages) do 
@@ -92,13 +92,24 @@ describe Srvy::Result, "get_single" do
     end 
   end
 
-  context "When the result has hosts with equal priority" do
+  context "When the result has hosts with unequal priority" do
     Given(:hosts){ hosts_with_unequal_priorities }
 
     # should only have the best (i.e. lowest) priority
     Then do
       expect(result_percentages[hosts[0]]).to be_within(allowance).of(1.0)
       expect(result_percentages[hosts[1]]).to be_within(allowance).of(0.0)
+    end 
+  end
+
+
+  context "When the result has hosts with unequal weights" do
+    Given(:hosts){ hosts_with_unequal_weight }
+
+    # should only have the best (i.e. lowest) priority
+    Then do
+      expect(result_percentages[hosts[0]]).to be_within(allowance).of(0.75)
+      expect(result_percentages[hosts[1]]).to be_within(allowance).of(0.25)
     end 
   end
 end
