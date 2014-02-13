@@ -1,4 +1,5 @@
 # Srvy
+[![Gem Version](https://badge.fury.io/rb/srvy.png)](http://badge.fury.io/rb/srvy)
 [![Build Status](https://travis-ci.org/nullstyle/srvy.png?branch=master)](https://travis-ci.org/nullstyle/srvy)
 [![Coverage Status](https://coveralls.io/repos/nullstyle/srvy/badge.png)](https://coveralls.io/r/nullstyle/srvy)
 [![Code Climate](https://codeclimate.com/github/nullstyle/srvy.png)](https://codeclimate.com/github/nullstyle/srvy)
